@@ -11,10 +11,10 @@
     </div>
 
     <div class="grid-layout-container margin-right">
-      <grid-layout
+      <GridLayout
                   :layout="layoutLeft"
                   :col-num="6"
-                  :colWidth="BASE_LEN"
+                  :col-width="BASE_LEN"
                   :row-height="BASE_LEN"
                   :is-draggable="true"
                   :is-resizable="false"
@@ -23,7 +23,7 @@
                   :margin="[0, 0]"
                   :use-css-transforms="true"
       >
-        <grid-item v-for="item in layoutLeft"
+        <GridItem v-for="item in layoutLeft"
                    :x="item.x"
                    :y="item.y"
                    :w="item.w"
@@ -37,119 +37,67 @@
                 :length="item.length"
                 :rotateX="item.rotateX"
                 :faceStyle="item.faceStyle">
-              <!-- custom face for each tile in left layout-->
-              <template v-if="item.i === '0'">
-                <div slot="front">
-                    <EdgeIcon style="fill: white" class="icon" />
-                    <div class="tile-label">
-                      Microsoft Edge
-                    </div>
+              <template #front>
+                <EdgeIcon v-if="item.i === '0'" style="fill: white" class="icon" />
+                <div v-if="item.i === '0'" class="tile-label">Microsoft Edge</div>
+
+                <XboxIcon v-if="item.i === '1'" style="fill: white" class="icon" />
+                <div v-if="item.i === '1'" class="tile-label">Xbox</div>
+
+                <OfficeIcon v-if="item.i === '2'" style="fill: white" class="icon" />
+                <div v-if="item.i === '2'" class="tile-label">My Office</div>
+
+                <OneNoteIcon v-if="item.i === '3'" style="fill: white" class="icon" />
+                <div v-if="item.i === '3'" class="tile-label">OneNote</div>
+
+                <PowerPointIcon v-if="item.i === '4'" style="fill: white" class="icon" />
+                <div v-if="item.i === '4'" class="tile-label">PowerPoint</div>
+
+                <CortanaIcon v-if="item.i === '5'" style="fill: white" class="icon" />
+                <div v-if="item.i === '5'" class="tile-label">Cortana</div>
+
+                <div v-if="item.i === '6'" class="calendar">
+                  <div class="calendar-week-day">{{ weekDay }}</div>
+                  <div class="calendar-month-day">{{ monthDay }}</div>
                 </div>
+
+                <template v-if="item.i === '7'">
+                  <div class="tile-label">Microsoft Store</div>
+                  <img src="https://user-images.githubusercontent.com/6414178/45696034-3fd14280-bb95-11e8-8c45-cd2020fabefc.png" class="store-cover-img" />
+                  <div class="store-title">Cyberpunk 2077</div>
+                  <div class="store-subtitle">Free⁴</div>
+                  <StoreIcon style="fill: white" class="store-icon-right"/>
+                </template>
               </template>
-              <template v-else-if="item.i === '1'">
-                <div slot="front">
-                    <XboxIcon style="fill: white" class="icon" />
-                    <div class="tile-label">
-                      Xbox
-                    </div>
-                </div>
+              <template #top>
+                <template v-if="item.i === '7'">
+                  <div class="tile-label">Microsoft Store</div>
+                  <img src="https://user-images.githubusercontent.com/6414178/45696084-56779980-bb95-11e8-87ac-817bf448cd4f.png" class="store-cover-img" />
+                  <div class="store-title">Half-Life 3: Episode 1</div>
+                  <div class="store-subtitle">Free⁴</div>
+                  <StoreIcon style="fill: white" class="store-icon-right"/>
+                </template>
               </template>
-              <template v-else-if="item.i === '2'">
-                <div slot="front">
-                    <OfficeIcon style="fill: white" class="icon" />
-                    <div class="tile-label">
-                      My Office
-                    </div>
-                </div>
-              </template>
-              <template v-else-if="item.i === '3'">
-                <div slot="front">
-                    <OneNoteIcon style="fill: white" class="icon" />
-                    <div class="tile-label">
-                      OneNote
-                    </div>
-                </div>
-              </template>
-              <template v-else-if="item.i === '4'">
-                <div slot="front">
-                    <PowerPointIcon style="fill: white" class="icon" />
-                    <div class="tile-label">
-                      PowerPoint
-                    </div>
-                </div>
-              </template>
-              <template v-else-if="item.i === '5'">
-                <div slot="front">
-                    <CortanaIcon style="fill: white" class="icon" />
-                    <div class="tile-label">
-                      Cortana
-                    </div>
-                </div>
-              </template>
-              <template v-else-if="item.i === '6'">
-                <div slot="front">
-                    <div class="calendar">
-                      <div class="calendar-week-day">
-                        {{weekDay}}
-                      </div>
-                      <div class="calendar-month-day">
-                        {{monthDay}}
-                      </div>
-                    </div>
-                </div>
-              </template>
-              <template v-else-if="item.i === '7'">
-                <div slot="front">
-                    <div class="tile-label">
-                      Microsoft Store
-                    </div>
-                    <img src="https://user-images.githubusercontent.com/6414178/45696034-3fd14280-bb95-11e8-8c45-cd2020fabefc.png" class="store-cover-img" />
-                    <div class="store-title">
-                      Cyberpunk 2077
-                    </div>
-                    <div class="store-subtitle">
-                        Free&#8314;
-                    </div>
-                    <StoreIcon style="fill: white" class="store-icon-right"/>
-                </div>
-                <div slot="top">
-                    <div class="tile-label">
-                      Microsoft Store
-                    </div>
-                    <img src="https://user-images.githubusercontent.com/6414178/45696084-56779980-bb95-11e8-87ac-817bf448cd4f.png" class="store-cover-img" />
-                    <div class="store-title">
-                      Half-Life 3: Episode 1
-                    </div>
-                    <div class="store-subtitle">
-                        Free&#8314;
-                    </div>
-                    <StoreIcon style="fill: white" class="store-icon-right"/>
-                </div>
-                <div slot="bottom">
-                    <div class="tile-label">
-                      Microsoft Store
-                    </div>
-                    <img src="https://user-images.githubusercontent.com/6414178/45696072-4eb7f500-bb95-11e8-8e7c-ccb0099e5161.png" class="store-cover-img" />
-                    <div class="store-title">
-                      Grand Theft Auto VI
-                    </div>
-                    <div class="store-subtitle">
-                        Free&#8314;
-                    </div>
-                    <StoreIcon style="fill: white" class="store-icon-right"/>
-                </div>
+              <template #bottom>
+                <template v-if="item.i === '7'">
+                  <div class="tile-label">Microsoft Store</div>
+                  <img src="https://user-images.githubusercontent.com/6414178/45696072-4eb7f500-bb95-11e8-8e7c-ccb0099e5161.png" class="store-cover-img" />
+                  <div class="store-title">Grand Theft Auto VI</div>
+                  <div class="store-subtitle">Free⁴</div>
+                  <StoreIcon style="fill: white" class="store-icon-right"/>
+                </template>
               </template>
             </MetroTile>
           </div>
-        </grid-item>
-      </grid-layout>
+        </GridItem>
+      </GridLayout>
     </div>
 
     <div class="grid-layout-container">
-      <grid-layout
+      <GridLayout
                   :layout="layoutRight"
                   :col-num="6"
-                  :colWidth="BASE_LEN"
+                  :col-width="BASE_LEN"
                   :row-height="BASE_LEN"
                   :is-draggable="true"
                   :is-resizable="false"
@@ -158,7 +106,7 @@
                   :margin="[0, 0]"
                   :use-css-transforms="true"
       >
-        <grid-item v-for="item in layoutRight"
+        <GridItem v-for="item in layoutRight"
                    :x="item.x"
                    :y="item.y"
                    :w="item.w"
@@ -178,430 +126,379 @@
                 :bottomStyle="item.bottomStyle"
                 :perspective="item.perspective"
                 v-on="item.i === '5' ? {click: redirect} : {}">
-              <!-- custom face for each tile in right layout-->
-              <template v-if="item.i === '0'">
-                <div slot="front">
-                  <WeatherIcon style="fill: white" class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '1'">
-                <div slot="front">
-                  <SettingsIcon style="fill: white" class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '2'">
-                <div slot="front">
-                  <PhotoIcon style="fill: white" class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '3'">
-                <div slot="front">
-                  <CameraIcon style="fill: white" class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '4'">
-                <div slot="front">
-                  <div class="tile-label">
-                    Excel
-                  </div>
+              <template #front>
+                <WeatherIcon v-if="item.i === '0'" style="fill: white" class="icon" />
+
+                <SettingsIcon v-if="item.i === '1'" style="fill: white" class="icon" />
+
+                <PhotoIcon v-if="item.i === '2'" style="fill: white" class="icon" />
+
+                <CameraIcon v-if="item.i === '3'" style="fill: white" class="icon" />
+
+                <template v-if="item.i === '4'">
+                  <div class="tile-label">Excel</div>
                   <ExcelIcon class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '5'">
-                <div slot="front">
-                  <div class="tile-label">
-                    View Source on GitHub
-                  </div>
+                </template>
+
+                <template v-if="item.i === '5'">
+                  <div class="tile-label">View Source on GitHub</div>
                   <GithubIcon style="fill: white" class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '6'">
-                <div slot="front">
-                  <div class="tile-label">
-                    Vue
-                  </div>
+                </template>
+
+                <template v-if="item.i === '6'">
+                  <div class="tile-label">Vue</div>
                   <img src="https://user-images.githubusercontent.com/6414178/45696077-51b2e580-bb95-11e8-91ab-097cc1d1b89d.png" class="image" />
-                </div>
-                <div slot="top">
-                  <div class="tile-label">
-                    Angular
-                  </div>
-                  <img src="./assets/angular.png" class="image" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '7'">
-                <div slot="front">
-                  <div class="tile-label">
-                    Groove Music
-                  </div>
+                </template>
+
+                <template v-if="item.i === '7'">
+                  <div class="tile-label">Groove Music</div>
                   <GrooveIcon style="fill: white" class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '8'">
-                <div slot="front">
-                  <div class="tile-label">
-                    Google Chrome
-                  </div>
+                </template>
+
+                <template v-if="item.i === '8'">
+                  <div class="tile-label">Google Chrome</div>
                   <ChromeIcon class="icon" />
-                </div>
-              </template>
-              <template v-else-if="item.i === '9'">
-                <div slot="front">
-                  <div class="tile-label">
-                    Access
-                  </div>
+                </template>
+
+                <template v-if="item.i === '9'">
+                  <div class="tile-label">Access</div>
                   <AccessIcon style="fill: white" class="icon" />
-                </div>
+                </template>
+              </template>
+              <template #top>
+                <template v-if="item.i === '6'">
+                  <div class="tile-label">Angular</div>
+                  <img src="./assets/angular.png" class="image" />
+                </template>
               </template>
             </MetroTile>
           </div>
-        </grid-item>
-      </grid-layout>
+        </GridItem>
+      </GridLayout>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import MetroTile from './components/MetroTile.vue'
-import VueGridLayout from 'vue-grid-layout';
-import EdgeIcon from './assets/edge.svg';
-import XboxIcon from './assets/xbox.svg';
-import OfficeIcon from './assets/office.svg';
-import OneNoteIcon from './assets/oneNote.svg';
-import PowerPointIcon from './assets/powerPoint.svg';
-import CortanaIcon from './assets/cortana.svg';
-import StoreIcon from './assets/store.svg';
-import WeatherIcon from './assets/weather.svg';
-import SettingsIcon from './assets/settings.svg';
-import PhotoIcon from './assets/photo.svg';
-import CameraIcon from './assets/camera.svg';
-import ExcelIcon from './assets/excel.svg';
-import GithubIcon from './assets/github.svg';
-import GrooveIcon from './assets/groove.svg';
-import ChromeIcon from './assets/chrome.svg';
-import AccessIcon from './assets/access.svg';
+import { GridLayout, GridItem } from 'grid-layout-plus'
+import EdgeIcon from './assets/edge.svg?component'
+import XboxIcon from './assets/xbox.svg?component'
+import OfficeIcon from './assets/office.svg?component'
+import OneNoteIcon from './assets/oneNote.svg?component'
+import PowerPointIcon from './assets/powerPoint.svg?component'
+import CortanaIcon from './assets/cortana.svg?component'
+import StoreIcon from './assets/store.svg?component'
+import WeatherIcon from './assets/weather.svg?component'
+import SettingsIcon from './assets/settings.svg?component'
+import PhotoIcon from './assets/photo.svg?component'
+import CameraIcon from './assets/camera.svg?component'
+import ExcelIcon from './assets/excel.svg?component'
+import GithubIcon from './assets/github.svg?component'
+import GrooveIcon from './assets/groove.svg?component'
+import ChromeIcon from './assets/chrome.svg?component'
+import AccessIcon from './assets/access.svg?component'
 
-const BASE_LEN = 65;
-const MARGIN = 3;
-const REPO_URL = 'https://github.com/yuanfux/vue-metro-tile';
+const BASE_LEN = 65
+const MARGIN = 3
+const REPO_URL = 'https://github.com/yuanfux/vue-metro-tile'
 
-export default {
-  name: 'app',
-  components: {
-    MetroTile,
-    VueGridLayout,
-    EdgeIcon,
-    XboxIcon,
-    OfficeIcon,
-    OneNoteIcon,
-    PowerPointIcon,
-    CortanaIcon,
-    StoreIcon,
-    WeatherIcon,
-    SettingsIcon,
-    PhotoIcon,
-    CameraIcon,
-    ExcelIcon,
-    GithubIcon,
-    GrooveIcon,
-    ChromeIcon,
-    AccessIcon
-  },
-  data: () => ({
-    BASE_LEN,
-    layoutLeft: [
-      {
-        x: 0,
-        y: 0,
-        w: 4,
-        h: 2,
-        i: "0",
-        width: BASE_LEN*4 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-       },
-      {
-        x: 2,
-        y: 2,
-        w: 4,
-        h: 2,
-        i: "1",
-        width: BASE_LEN*4 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#228b22'
-        }
-      },
-      {
-        x: 0,
-        y: 4,
-        w: 4,
-        h: 2,
-        i: "2",
-        width: BASE_LEN*4 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#ff4500'
-        }
-      },
-      {
-        x: 4,
-        y: 0,
-        w: 2,
-        h: 2,
-        i: "3",
-        width: BASE_LEN*2 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#9400d3'
-        }
-      },
-      {
-        x: 4,
-        y: 4,
-        w: 2,
-        h: 2,
-        i: "4",
-        width: BASE_LEN*2 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#ffa07a'
-        }
-      },
-      {
-        x: 0,
-        y: 2,
-        w: 2,
-        h: 2,
-        i: "5",
-        width: BASE_LEN*2 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 0,
-        y: 6,
-        w: 2,
-        h: 2,
-        i: "6",
-        width: BASE_LEN*2 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 2,
-        y: 6,
-        w: 4,
-        h: 2,
-        i: "7",
-        width: BASE_LEN*4 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      }
-    ],
-    layoutRight: [
-      {
-        x: 0,
-        y: 0,
-        w: 1,
-        h: 1,
-        i: "0",
-        width: BASE_LEN - MARGIN*2,
-        height: BASE_LEN - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 1,
-        y: 0,
-        w: 1,
-        h: 1,
-        i: "1",
-        width: BASE_LEN - MARGIN*2,
-        height: BASE_LEN - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 1,
-        y: 1,
-        w: 1,
-        h: 1,
-        i: "2",
-        width: BASE_LEN - MARGIN*2,
-        height: BASE_LEN - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 0,
-        y: 1,
-        w: 1,
-        h: 1,
-        i: "3",
-        width: BASE_LEN - MARGIN*2,
-        height: BASE_LEN - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 2,
-        y: 0,
-        w: 4,
-        h: 2,
-        i: "4",
-        width: BASE_LEN*4 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#3cb371'
-        }
-      },
-      {
-        x: 0,
-        y: 2,
-        w: 4,
-        h: 4,
-        i: "5",
-        width: BASE_LEN*4 - MARGIN*2,
-        height: BASE_LEN*4 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#000'
-        }
-      },
-      {
-        x: 4,
-        y: 2,
-        w: 2,
-        h: 2,
-        i: "6",
-        width: BASE_LEN*2 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        frontStyle: {
-          'background-color': '#8a2be2'
-        },
-        topStyle: {
-          'background-color': '#1E90FF'
-        },
-        backStyle: {
-          'background-color': 'yellow'
-        },
-        bottomStyle: {
-          'background-color': 'green'
-        },
-        perspective: 0
-      },
-      {
-        x: 4,
-        y: 4,
-        w: 2,
-        h: 2,
-        i: "7",
-        width: BASE_LEN*2 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#4169e1'
-        }
-      },
-      {
-        x: 0,
-        y: 6,
-        w: 4,
-        h: 2,
-        i: "8",
-        width: BASE_LEN*4 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#4169e1'
-        }
-      },
-      {
-        x: 4,
-        y: 6,
-        w: 2,
-        h: 2,
-        i: "9",
-        width: BASE_LEN*2 - MARGIN*2,
-        height: BASE_LEN*2 - MARGIN*2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#cd5c5c'
-        }
-      }
-    ],
-    weekDay: (() => {
-      const weekDayMap = {
-        0: 'Sunday',
-        1: 'Monday',
-        2: 'Tuesday',
-        3: 'Wednesday',
-        4: 'Thursday',
-        5: 'Friday',
-        6: 'Saturday'
-      }
-      return weekDayMap[new Date().getDay()];
-    })(),
-    monthDay: (() => {
-      return new Date().getDate();
-    })(),
-    rotateIndex1: 0,  
-    rotateArray1: [-90, 90, 90, -90],  
-    rotateIndex2: 0,  
-    rotateArray2: [-90, 90],
-  }),
-  methods: {
-    setRotateX(layoutItem, rotateIndexName, rotateArray) {
-      layoutItem.rotateX += rotateArray[this[rotateIndexName] % rotateArray.length];
-      this[rotateIndexName] += 1;
-    },
-    redirect() {
-      window.open(REPO_URL, '_blank');
-      // window.location.href = REPO_URL;
+const weekDay = (() => {
+  const weekDayMap = {
+    0: 'Sunday',
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday'
+  }
+  return weekDayMap[new Date().getDay()]
+})()
+
+const monthDay = new Date().getDate()
+
+const layoutLeft = reactive([
+  {
+    x: 0,
+    y: 0,
+    w: 4,
+    h: 2,
+    i: "0",
+    width: BASE_LEN * 4 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
     }
   },
-  mounted() {
-    this.interval1 = setInterval(
-      () => {
-        this.setRotateX(this.layoutLeft[7], 'rotateIndex1', this.rotateArray1);
-      }, 3000);
-    this.interval2 = setInterval(
-      () => {
-        this.setRotateX(this.layoutRight[6], 'rotateIndex2', this.rotateArray2);
-      }, 5000);
+  {
+    x: 2,
+    y: 2,
+    w: 4,
+    h: 2,
+    i: "1",
+    width: BASE_LEN * 4 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#228b22'
+    }
   },
-  beforeDestroy() {
-    clearInterval(this.interval1);
-    clearInterval(this.interval2);
+  {
+    x: 0,
+    y: 4,
+    w: 4,
+    h: 2,
+    i: "2",
+    width: BASE_LEN * 4 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#ff4500'
+    }
+  },
+  {
+    x: 4,
+    y: 0,
+    w: 2,
+    h: 2,
+    i: "3",
+    width: BASE_LEN * 2 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#9400d3'
+    }
+  },
+  {
+    x: 4,
+    y: 4,
+    w: 2,
+    h: 2,
+    i: "4",
+    width: BASE_LEN * 2 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#ffa07a'
+    }
+  },
+  {
+    x: 0,
+    y: 2,
+    w: 2,
+    h: 2,
+    i: "5",
+    width: BASE_LEN * 2 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
+    }
+  },
+  {
+    x: 0,
+    y: 6,
+    w: 2,
+    h: 2,
+    i: "6",
+    width: BASE_LEN * 2 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
+    }
+  },
+  {
+    x: 2,
+    y: 6,
+    w: 4,
+    h: 2,
+    i: "7",
+    width: BASE_LEN * 4 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
+    }
   }
+])
+
+const layoutRight = reactive([
+  {
+    x: 0,
+    y: 0,
+    w: 1,
+    h: 1,
+    i: "0",
+    width: BASE_LEN - MARGIN * 2,
+    height: BASE_LEN - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
+    }
+  },
+  {
+    x: 1,
+    y: 0,
+    w: 1,
+    h: 1,
+    i: "1",
+    width: BASE_LEN - MARGIN * 2,
+    height: BASE_LEN - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
+    }
+  },
+  {
+    x: 1,
+    y: 1,
+    w: 1,
+    h: 1,
+    i: "2",
+    width: BASE_LEN - MARGIN * 2,
+    height: BASE_LEN - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
+    }
+  },
+  {
+    x: 0,
+    y: 1,
+    w: 1,
+    h: 1,
+    i: "3",
+    width: BASE_LEN - MARGIN * 2,
+    height: BASE_LEN - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#1E90FF'
+    }
+  },
+  {
+    x: 2,
+    y: 0,
+    w: 4,
+    h: 2,
+    i: "4",
+    width: BASE_LEN * 4 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#3cb371'
+    }
+  },
+  {
+    x: 0,
+    y: 2,
+    w: 4,
+    h: 4,
+    i: "5",
+    width: BASE_LEN * 4 - MARGIN * 2,
+    height: BASE_LEN * 4 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#000'
+    }
+  },
+  {
+    x: 4,
+    y: 2,
+    w: 2,
+    h: 2,
+    i: "6",
+    width: BASE_LEN * 2 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    frontStyle: {
+      'background-color': '#8a2be2'
+    },
+    topStyle: {
+      'background-color': '#1E90FF'
+    },
+    backStyle: {
+      'background-color': 'yellow'
+    },
+    bottomStyle: {
+      'background-color': 'green'
+    },
+    perspective: 0
+  },
+  {
+    x: 4,
+    y: 4,
+    w: 2,
+    h: 2,
+    i: "7",
+    width: BASE_LEN * 2 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#4169e1'
+    }
+  },
+  {
+    x: 0,
+    y: 6,
+    w: 4,
+    h: 2,
+    i: "8",
+    width: BASE_LEN * 4 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#4169e1'
+    }
+  },
+  {
+    x: 4,
+    y: 6,
+    w: 2,
+    h: 2,
+    i: "9",
+    width: BASE_LEN * 2 - MARGIN * 2,
+    height: BASE_LEN * 2 - MARGIN * 2,
+    rotateX: 0,
+    faceStyle: {
+      'background-color': '#cd5c5c'
+    }
+  }
+])
+
+const rotateIndex1 = ref(0)
+const rotateArray1 = [-90, 90, 90, -90]
+const rotateIndex2 = ref(0)
+const rotateArray2 = [-90, 90]
+
+function setRotateX(layoutItem, rotateIndexRef, rotateArray) {
+  layoutItem.rotateX += rotateArray[rotateIndexRef.value % rotateArray.length]
+  rotateIndexRef.value += 1
 }
+
+function redirect() {
+  window.open(REPO_URL, '_blank')
+}
+
+let interval1 = null
+let interval2 = null
+
+onMounted(() => {
+  interval1 = setInterval(() => {
+    setRotateX(layoutLeft[7], rotateIndex1, rotateArray1)
+  }, 3000)
+  interval2 = setInterval(() => {
+    setRotateX(layoutRight[6], rotateIndex2, rotateArray2)
+  }, 5000)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(interval1)
+  clearInterval(interval2)
+})
 </script>
 
 <style>
@@ -737,5 +634,4 @@ body {
   font-size: 30px;
   transform: scale(1.75);
 }
-
 </style>

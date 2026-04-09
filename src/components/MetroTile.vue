@@ -27,329 +27,305 @@
         <slot name="left"></slot>
       </div>
     </div>
-    <div :class="{border: isHover && !isMouseDown}" :style="glareBoundingBox">
+    <div :class="{ border: isHover && !isMouseDown }" :style="glareBoundingBox">
       <div :style="hoverGlareStyle">
       </div>
-      <div :class="{ripple: isAnimating }" :style="clickGlareStyle" @animationend="resetAnimation">
+      <div :class="{ ripple: isAnimating }" :style="clickGlareStyle" @animationend="resetAnimation">
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MetroTile',
-  props: {
-    faceStyle: {
-      type: Object
-    },
-    frontStyle: {
-      type: Object
-    },
-    backStyle: {
-      type: Object
-    },
-    rightStyle: {
-      type: Object
-    },
-    leftStyle: {
-      type: Object
-    },
-    topStyle: {
-      type: Object
-    },
-    bottomStyle: {
-      type: Object
-    },
-    rotateX: {
-      type: Number,
-      default: 0
-    },
-    height: {
-      type: Number,
-      default: 200
-    },
-    width: {
-      type: Number,
-      default: 250
-    },
-    perspective: {
-      type: Number,
-      default: 750
-    },
-    maxTiltX: {
-      type: Number,
-      default: 20
-    },
-    maxTiltY: {
-      type: Number,
-      default: 10
-    },
-    clickGlareSize: {
-      type: Number,
-      default: 90
-    },
-    clickGlareOpacity: {
-      type: Number,
-      default: 0.2
-    },
-    hoverGlareOpacity: {
-      type: Number,
-      default: 0.3
-    }
+<script setup>
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+  faceStyle: {
+    type: Object,
+    default: undefined
   },
-  data: function() {
-    return {
-      curTiltTransform: '',
-      clickGlareTop: 0,
-      clickGlareLeft: 0,
-      glareScale: 5,
-      hoverX: 0,
-      hoverY: 0,
-      mouseDownX: 0,
-      mouseDownY: 0,
-      isHover: false,
-      isMouseDown: false,
-      isAnimating: false
-    }
+  frontStyle: {
+    type: Object,
+    default: undefined
   },
-  computed: {
-    sceneStyle: function() {
-      return {
-        position: 'relative',
-        cursor: 'pointer',
-        width: `${this.width}px`,
-        height: `${this.height}px`,
-        perspective: `${this.perspective}px`,
-        overflow: 'hidden',
-        'background-color': 'rgba(153,153,153,0.3)'
-      }
-    },
-    curFaceTransform: function() {
-      return `translateZ(-${this.height/2}px) rotateX(${this.rotateX}deg)`;
-    },
-    boxContainerStyle: function() {
-      return {
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        'transform-style': 'preserve-3d',
-        transition: 'transform 0.5s',
-        transform: `${this.curTiltTransform} ${this.curFaceTransform}`,
-        'will-change': 'transform'
-      }
-    },
-    glareBoundingBox: function() {
-      // translateZ mainly deals with the Safari z-index conflicting with transform issue
-      // tilt cannot exceed the larger number of height/2 and length/2
-      const translateZ = Math.max(this.height/2, this.width/2);
-      // need to offset the scaling effect caused by translateZ
-      const scaleOffset = this.perspective ? this.perspective / (this.perspective - translateZ) : 1;
-      return {
-        width: '100%',
-        height: '100%',
-        top: 0,
-        left: 0,
-        position: 'absolute',
-        overflow: 'hidden',
-        'transform-style': 'preserve-3d',
-        transform: `scale(${1/scaleOffset}, ${1/scaleOffset}) translateZ(${translateZ}px`,
-        'pointer-events': 'none'
-      }
-    },
-    hoverGlareStyle: function() {
-      return {
-        position: 'absolute',
-        width: `${this.width*2}px`,
-        height: `${this.height*2}px`,
-        'background-image': `radial-gradient(circle at center, rgba(255,255,255, 0.7) 0%, rgba(255,255,255,0.1) 100%)`,
-        transform: `translate(${this.hoverX-this.width/2}px, ${this.hoverY-this.height/2}px) translate(-${this.width/2}px, -${this.height/2}px)`,
-        opacity: this.isHover ? this.hoverGlareOpacity : 0,
-        'transform-style': 'preserve-3d',
-        // 'will-change': 'transform'
-      } 
-    },
-    clickGlareStyle: function() {
-      const glareScaledsize = this.clickGlareSize * this.glareScale;
-      // for Microsoft Edge compatibility issue, scale transform is banned
-      // the width & height transform is not centered
-      // offset is needed for centering the scale animation
-      const glareScaledOffset = (glareScaledsize - this.clickGlareSize) / 2;
-      const glareTop = this.clickGlareTop - this.clickGlareSize/2;
-      const glareLeft = this.clickGlareLeft - this.clickGlareSize/2;
-      return {
-        position: 'absolute',
-        width: `${this.clickGlareSize}px`,
-        height: `${this.clickGlareSize}px`,
-        opacity: 0,
-        'border-radius': '50%',
-        '--glare-top': `${glareTop}px`,
-        '--glare-left': `${glareLeft}px`,
-        '--glare-opacity': `${this.clickGlareOpacity}`,
-        '--glare-scaled-size': `${glareScaledsize}px`,
-        '--glare-scaled-top': `${glareTop - glareScaledOffset}px`,
-        '--glare-scaled-left': `${glareLeft - glareScaledOffset}px`,
-        'transform-style': 'preserve-3d',
-        // 'will-change': 'transform opacity'
-      }
-    },
-    frontFaceStyle: function() {
-      return {
-        ...this.faceStyle,
-        ...this.frontStyle,
-        position: 'absolute',
-        width: `${this.width}px`,
-        height: `${this.height}px`,
-        transform: `translateZ(${this.height/2}px)`,
-        outline: '1px solid transparent'
-      }
-    },
-    backFaceStyle: function() {
-      return {
-        ...this.faceStyle,
-        ...this.backStyle,
-        position: 'absolute',
-        width: `${this.width}px`,
-        height: `${this.height}px`,
-        // use rotateZ to adjust back face position when rotating
-        transform: `translateZ(-${this.height/2}px) rotateZ(180deg) rotateY(180deg)`,
-        outline: '1px solid transparent'
-      }
-    },
-    topFaceStyle: function() {
-      return {
-        ...this.faceStyle,
-        ...this.topStyle,
-        position: 'absolute',
-        width: `${this.width}px`,
-        height: `${this.height}px`,
-        transform: `translateY(-${this.height/2}px) rotateX(90deg)`,
-        outline: '1px solid transparent'
-      }
-    },
-    bottomFaceStyle: function() {
-      return {
-        ...this.faceStyle,
-        ...this.bottomStyle,
-        position: 'absolute',
-        width: `${this.width}px`,
-        height: `${this.height}px`,
-        transform: `translateY(${this.height-this.height/2}px) rotateX(-90deg)`,
-        outline: '1px solid transparent'
-      }
-    },
-    leftFaceStyle: function() {
-      return {
-        ...this.faceStyle,
-        ...this.leftStyle,
-        position: 'absolute',
-        width: `${this.height}px`,
-        height: `${this.height}px`,
-        transform: `translateX(-${this.height/2}px) rotateY(-90deg)`,
-        outline: '1px solid transparent'
-      }
-    },
-    rightFaceStyle: function() {
-      return {
-        ...this.faceStyle,
-        ...this.rightStyle,
-        position: 'absolute',
-        width: `${this.height}px`,
-        height: `${this.height}px`,
-        transform: `translateX(${this.width-this.height/2}px) rotateY(90deg)`,
-        outline: '1px solid transparent'
-      }
-    }
+  backStyle: {
+    type: Object,
+    default: undefined
   },
-  methods: {
-    // get relative mouse position to the scene
-    getRelativePos2Scene(pageX, pageY) {
-      const boundingRect = this.$refs.scene.getBoundingClientRect();
-      return {
-        x: pageX - (boundingRect.left + window.scrollX),
-        y: pageY - (boundingRect.top + window.scrollY)
-      }
-    },
-
-    onMouseDown(event) {
-      const relativePos = this.getRelativePos2Scene(event.pageX, event.pageY);
-      this.mouseDownX = event.pageX;
-      this.mouseDownY = event.pageY;
-      this.tiltTile(relativePos);
-      this.clickGlare(relativePos);
-      this.setMouseDown(true);
-    },
-
-    onMouseUp(event) {
-      // only emit click when mousedown and mouseup 
-      // are at the same position
-      if (
-        this.mouseDownX === event.pageX &&
-        this.mouseDownY === event.pageY
-      ) {
-        this.$emit('click', event);
-      }
-      this.recoverTile();
-      this.setMouseDown(false);
-    },
-
-    onMouseMove(event) {
-      const relativePos = this.getRelativePos2Scene(event.pageX, event.pageY);
-      this.hoverGlare(relativePos);
-    },
-
-    onMouseLeave() {
-      this.recoverTile();
-      this.resetHover();
-    },
-
-    onTouchMove(event) {
-      this.$emit('touchmove', event);
-    },
-
-    // tilt the tile based on relative mouse position
-    tiltTile(relativePos) {
-      const percentageX = relativePos.x / this.width;
-      const percentageY = relativePos.y / this.height;
-      const tiltX = ((0.5 - percentageY) * this.maxTiltX).toFixed(2);
-      const tiltY = ((percentageX - 0.5) * this.maxTiltY).toFixed(2);
-      this.curTiltTransform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-    },
-
-    // recover the tile from tilting
-    recoverTile() {
-      this.curTiltTransform = '';
-    },
-
-    // reset hover variable
-    resetHover() {
-      this.isHover = false;
-    },
-
-    // trigger glare effect when clicking
-    clickGlare(relativePos) {
-      this.clickGlareTop = relativePos.y;
-      this.clickGlareLeft = relativePos.x;
-      this.isAnimating = true;
-    },
-
-    // reset the click glare animation
-    resetAnimation() {
-      this.isAnimating = false;
-    },
-
-    // trigger glare effect when hovering 
-    hoverGlare(relativePos) {
-      this.isHover = true;
-      this.hoverX = relativePos.x;
-      this.hoverY = relativePos.y;
-    },
-
-    // set click variable
-    setMouseDown(state) {
-      this.isMouseDown = state;
-    }
+  rightStyle: {
+    type: Object,
+    default: undefined
+  },
+  leftStyle: {
+    type: Object,
+    default: undefined
+  },
+  topStyle: {
+    type: Object,
+    default: undefined
+  },
+  bottomStyle: {
+    type: Object,
+    default: undefined
+  },
+  rotateX: {
+    type: Number,
+    default: 0
+  },
+  height: {
+    type: Number,
+    default: 200
+  },
+  width: {
+    type: Number,
+    default: 250
+  },
+  perspective: {
+    type: Number,
+    default: 750
+  },
+  maxTiltX: {
+    type: Number,
+    default: 20
+  },
+  maxTiltY: {
+    type: Number,
+    default: 10
+  },
+  clickGlareSize: {
+    type: Number,
+    default: 90
+  },
+  clickGlareOpacity: {
+    type: Number,
+    default: 0.2
+  },
+  hoverGlareOpacity: {
+    type: Number,
+    default: 0.3
   }
+})
+
+const emit = defineEmits(['click', 'touchmove'])
+
+// Template refs
+const scene = ref(null)
+
+// Reactive state
+const curTiltTransform = ref('')
+const clickGlareTop = ref(0)
+const clickGlareLeft = ref(0)
+const glareScale = ref(5)
+const hoverX = ref(0)
+const hoverY = ref(0)
+const mouseDownX = ref(0)
+const mouseDownY = ref(0)
+const isHover = ref(false)
+const isMouseDown = ref(false)
+const isAnimating = ref(false)
+
+// Computed styles
+const sceneStyle = computed(() => ({
+  position: 'relative',
+  cursor: 'pointer',
+  width: `${props.width}px`,
+  height: `${props.height}px`,
+  perspective: `${props.perspective}px`,
+  overflow: 'hidden',
+  'background-color': 'rgba(153,153,153,0.3)'
+}))
+
+const curFaceTransform = computed(() =>
+  `translateZ(-${props.height / 2}px) rotateX(${props.rotateX}deg)`
+)
+
+const boxContainerStyle = computed(() => ({
+  width: '100%',
+  height: '100%',
+  position: 'relative',
+  'transform-style': 'preserve-3d',
+  transition: 'transform 0.5s',
+  transform: `${curTiltTransform.value} ${curFaceTransform.value}`,
+  'will-change': 'transform'
+}))
+
+const glareBoundingBox = computed(() => {
+  const translateZ = Math.max(props.height / 2, props.width / 2)
+  const scaleOffset = props.perspective ? props.perspective / (props.perspective - translateZ) : 1
+  return {
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+    position: 'absolute',
+    overflow: 'hidden',
+    'transform-style': 'preserve-3d',
+    transform: `scale(${1 / scaleOffset}, ${1 / scaleOffset}) translateZ(${translateZ}px`,
+    'pointer-events': 'none'
+  }
+})
+
+const hoverGlareStyle = computed(() => ({
+  position: 'absolute',
+  width: `${props.width * 2}px`,
+  height: `${props.height * 2}px`,
+  'background-image': `radial-gradient(circle at center, rgba(255,255,255, 0.7) 0%, rgba(255,255,255,0.1) 100%)`,
+  transform: `translate(${hoverX.value - props.width / 2}px, ${hoverY.value - props.height / 2}px) translate(-${props.width / 2}px, -${props.height / 2}px)`,
+  opacity: isHover.value ? props.hoverGlareOpacity : 0,
+  'transform-style': 'preserve-3d'
+}))
+
+const clickGlareStyle = computed(() => {
+  const glareScaledsize = props.clickGlareSize * glareScale.value
+  const glareScaledOffset = (glareScaledsize - props.clickGlareSize) / 2
+  const glareTop = clickGlareTop.value - props.clickGlareSize / 2
+  const glareLeft = clickGlareLeft.value - props.clickGlareSize / 2
+  return {
+    position: 'absolute',
+    width: `${props.clickGlareSize}px`,
+    height: `${props.clickGlareSize}px`,
+    opacity: 0,
+    'border-radius': '50%',
+    '--glare-top': `${glareTop}px`,
+    '--glare-left': `${glareLeft}px`,
+    '--glare-opacity': `${props.clickGlareOpacity}`,
+    '--glare-scaled-size': `${glareScaledsize}px`,
+    '--glare-scaled-top': `${glareTop - glareScaledOffset}px`,
+    '--glare-scaled-left': `${glareLeft - glareScaledOffset}px`,
+    'transform-style': 'preserve-3d'
+  }
+})
+
+const frontFaceStyle = computed(() => ({
+  ...props.faceStyle,
+  ...props.frontStyle,
+  position: 'absolute',
+  width: `${props.width}px`,
+  height: `${props.height}px`,
+  transform: `translateZ(${props.height / 2}px)`,
+  outline: '1px solid transparent'
+}))
+
+const backFaceStyle = computed(() => ({
+  ...props.faceStyle,
+  ...props.backStyle,
+  position: 'absolute',
+  width: `${props.width}px`,
+  height: `${props.height}px`,
+  transform: `translateZ(-${props.height / 2}px) rotateZ(180deg) rotateY(180deg)`,
+  outline: '1px solid transparent'
+}))
+
+const topFaceStyle = computed(() => ({
+  ...props.faceStyle,
+  ...props.topStyle,
+  position: 'absolute',
+  width: `${props.width}px`,
+  height: `${props.height}px`,
+  transform: `translateY(-${props.height / 2}px) rotateX(90deg)`,
+  outline: '1px solid transparent'
+}))
+
+const bottomFaceStyle = computed(() => ({
+  ...props.faceStyle,
+  ...props.bottomStyle,
+  position: 'absolute',
+  width: `${props.width}px`,
+  height: `${props.height}px`,
+  transform: `translateY(${props.height - props.height / 2}px) rotateX(-90deg)`,
+  outline: '1px solid transparent'
+}))
+
+const leftFaceStyle = computed(() => ({
+  ...props.faceStyle,
+  ...props.leftStyle,
+  position: 'absolute',
+  width: `${props.height}px`,
+  height: `${props.height}px`,
+  transform: `translateX(-${props.height / 2}px) rotateY(-90deg)`,
+  outline: '1px solid transparent'
+}))
+
+const rightFaceStyle = computed(() => ({
+  ...props.faceStyle,
+  ...props.rightStyle,
+  position: 'absolute',
+  width: `${props.height}px`,
+  height: `${props.height}px`,
+  transform: `translateX(${props.width - props.height / 2}px) rotateY(90deg)`,
+  outline: '1px solid transparent'
+}))
+
+// Methods
+function getRelativePos2Scene(pageX, pageY) {
+  const boundingRect = scene.value.getBoundingClientRect()
+  return {
+    x: pageX - (boundingRect.left + window.scrollX),
+    y: pageY - (boundingRect.top + window.scrollY)
+  }
+}
+
+function onMouseDown(event) {
+  const relativePos = getRelativePos2Scene(event.pageX, event.pageY)
+  mouseDownX.value = event.pageX
+  mouseDownY.value = event.pageY
+  tiltTile(relativePos)
+  clickGlare(relativePos)
+  isMouseDown.value = true
+}
+
+function onMouseUp(event) {
+  if (mouseDownX.value === event.pageX && mouseDownY.value === event.pageY) {
+    emit('click', event)
+  }
+  recoverTile()
+  isMouseDown.value = false
+}
+
+function onMouseMove(event) {
+  const relativePos = getRelativePos2Scene(event.pageX, event.pageY)
+  hoverGlare(relativePos)
+}
+
+function onMouseLeave() {
+  recoverTile()
+  resetHover()
+}
+
+function onTouchMove(event) {
+  emit('touchmove', event)
+}
+
+function tiltTile(relativePos) {
+  const percentageX = relativePos.x / props.width
+  const percentageY = relativePos.y / props.height
+  const tiltX = ((0.5 - percentageY) * props.maxTiltX).toFixed(2)
+  const tiltY = ((percentageX - 0.5) * props.maxTiltY).toFixed(2)
+  curTiltTransform.value = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`
+}
+
+function recoverTile() {
+  curTiltTransform.value = ''
+}
+
+function resetHover() {
+  isHover.value = false
+}
+
+function clickGlare(relativePos) {
+  clickGlareTop.value = relativePos.y
+  clickGlareLeft.value = relativePos.x
+  isAnimating.value = true
+}
+
+function resetAnimation() {
+  isAnimating.value = false
+}
+
+function hoverGlare(relativePos) {
+  isHover.value = true
+  hoverX.value = relativePos.x
+  hoverY.value = relativePos.y
 }
 </script>
 
@@ -375,7 +351,6 @@ export default {
     transform: translate(var(--glare-scaled-left), var(--glare-scaled-top));
     opacity: 0;
   }
-
 }
 
 .border::before {

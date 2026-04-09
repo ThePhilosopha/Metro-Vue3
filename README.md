@@ -1,7 +1,6 @@
-
 # vue-metro-tile
 
-[![npm](https://img.shields.io/npm/v/vue-metro-tile.svg?style=flat-square)](https://www.npmjs.com/package/vue-metro-tile) [![GitHub issues](https://img.shields.io/github/issues/yuanfux/vue-metro-tile.svg?style=flat-square)](https://github.com/yuanfux/vue-metro-tile/issues) [![GitHub closed issues](https://img.shields.io/github/issues-closed/yuanfux/vue-metro-tile.svg?style=flat-square)](https://github.com/yuanfux/vue-metro-tile/issues?q=is%3Aissue+is%3Aclosed) ![Maintenance](https://img.shields.io/maintenance/yes/2019.svg?style=flat-square) ![NpmLicense](https://img.shields.io/npm/l/vue-metro-tile.svg?style=flat-square)
+[![npm](https://img.shields.io/npm/v/vue-metro-tile.svg?style=flat-square)](https://www.npmjs.com/package/vue-metro-tile) [![GitHub issues](https://img.shields.io/github/issues/yuanfux/vue-metro-tile.svg?style=flat-square)](https://github.com/yuanfux/vue-metro-tile/issues) [![GitHub closed issues](https://img.shields.io/github/issues-closed/yuanfux/vue-metro-tile.svg?style=flat-square)](https://github.com/yuanfux/vue-metro-tile/issues?q=is%3Aissue+is%3Aclosed) ![NpmLicense](https://img.shields.io/npm/l/vue-metro-tile.svg?style=flat-square)
 
 <p align="center">
   <img width="150" height="150" src="https://user-images.githubusercontent.com/6414178/45662644-3a441000-bb35-11e8-8e72-e6ed618a733d.png">
@@ -9,14 +8,16 @@
 
 ## Preview
 View [Demo](https://yuanfux.github.io/vue-metro-tile/)
-> The demo is empowered by `vue-metro-tile` & `vue-grid-layout`
+> The demo is empowered by `vue-metro-tile` & `vue-grid-layout-plus`
 
-Vue Metro Tile is a Vue component for building Windows 10 like metro layout in modern browser.
-The component currently got the following features:
+Vue Metro Tile is a Vue 3 component for building Windows 10 like metro layout in modern browser.
+The component currently has the following features:
 1. Customized tile content
 2. 3D tile rotation
 3. Glare effect when hovering or clicking
 4. Tilt effect when mouse holds down
+
+> **Note:** Version 2.x supports Vue 3. For Vue 2, use version 1.x.
 
 ## Install
 ```
@@ -26,39 +27,46 @@ or
 ```
 yarn add vue-metro-tile
 ```
+
 ## Import
-> support both cjs and umd
 ```js
-import MetroTile from 'vue-metro-tile';
+// Global registration
+import { createApp } from 'vue'
+import MetroTile from 'vue-metro-tile'
+import 'vue-metro-tile/dist/style.css'
+
+const app = createApp(App)
+app.use(MetroTile)
+app.mount('#app')
 ```
 or
 ```js
- <script src="/path/to/vue-metro-tile.umd.min.js"></script>
+// Local registration in a component
+import { MetroTile } from 'vue-metro-tile'
+import 'vue-metro-tile/dist/style.css'
 ```
-
 
 ## Usage
->  A blue metro tile with simple texts on 4 faces
+> A blue metro tile with simple texts on 4 faces (Vue 3 slot syntax)
 ```html
-<metro-tile
+<MetroTile
     @click="handleClick($event)" 
-    faceStyle="{'background-color': 'blue'}"
+    :faceStyle="{'background-color': 'blue'}"
     >
-  <div slot="front">
+  <template #front>
     front
-  </div>
-  <div slot="back">
+  </template>
+  <template #back>
     back
-  </div>
-  <div slot="top">
+  </template>
+  <template #top>
     top
-  </div>
-  <div slot="bottom">
+  </template>
+  <template #bottom>
     bottom
-  </div>
-</metro-tile>
+  </template>
+</MetroTile>
 ```
-
 
 ## Props
 
@@ -111,7 +119,6 @@ clickGlareOpacity?: number = 0.15;
 
 // the glare opacity when hovering
 hoverGlareOpacity?: number = 0.3;
-
 ```
 
 ## Slots
@@ -123,7 +130,9 @@ hoverGlareOpacity?: number = 0.3;
  - `top`
  - `bottom`
 
-##  Events
+> **Vue 3 Note:** Use `#slotName` or `v-slot:slotName` syntax instead of the Vue 2 `slot="slotName"` syntax.
+
+## Events
 
  - `click`
  - `touchmove`
@@ -133,7 +142,30 @@ hoverGlareOpacity?: number = 0.3;
 | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" /><br/>Edge | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" /><br/>Firefox | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" /><br/>Chrome | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" /><br/>Safari | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" /><br/>Opera |
 | :----: | :----: | :----: | :----: | :----: |
 | latest | latest | latest | latest | latest |
-> Some older versions may be supported as well
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run dev server
+npm run dev
+
+# Build demo
+npm run build
+
+# Build library
+npm run build-lib
+```
+
+## Migration from v1 (Vue 2) to v2 (Vue 3)
+
+- Slot syntax changed: `slot="front"` → `#front` or `v-slot:front`
+- Lifecycle hooks renamed: `beforeDestroy` → `onBeforeUnmount`
+- Import syntax changed: `import Vue from 'vue'` → `import { createApp } from 'vue'`
+- Component registration uses `app.use()` or local import pattern
+- Built with Vite instead of Vue CLI
 
 ## License
 MIT

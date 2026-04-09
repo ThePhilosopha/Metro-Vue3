@@ -1,21 +1,31 @@
 {
   "name": "vue-metro-tile",
-  "version": "1.0.6",
-  "description": "A windows 10 metro tile component in vue",
-  "main": "dist/vue-metro-tile.common.js",
-  "unpkg": "dist/vue-metro-tile.umd.min.js",
+  "version": "2.0.0",
+  "description": "A Windows 10 metro tile component for Vue 3 with 3D rotation, glare, and tilt effects",
+  "type": "module",
+  "main": "./dist/vue-metro-tile.umd.cjs",
+  "module": "./dist/vue-metro-tile.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-metro-tile.js",
+      "require": "./dist/vue-metro-tile.umd.cjs"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
   "author": "Yuan Fu <fuyuanx@gmail.com>",
+  "license": "MIT",
   "keywords": [
+    "vue",
+    "vue3",
     "metro",
     "tile",
-    "windows"
-  ],
-  "files": [
-    "dist/vue-metro-tile.common.js",
-    "dist/vue-metro-tile.umd.js",
-    "dist/vue-metro-tile.umd.min.js",
-    "dist/vue-metro-tile.css",
-    "README.md"
+    "windows",
+    "3d",
+    "tilt",
+    "glare"
   ],
   "homepage": "https://github.com/yuanfux/vue-metro-tile#readme",
   "repository": {
@@ -23,45 +33,24 @@
     "url": "https://github.com/yuanfux/vue-metro-tile.git"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest docs",
-    "build-lib": "vue-cli-service build --target lib ./src/components/MetroTile.vue",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "build-lib": "vite build --mode lib",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs"
   },
   "dependencies": {
-    "vue": "^2.6.10"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.9.2",
-    "@vue/cli-plugin-eslint": "^3.9.2",
-    "@vue/cli-service": "^3.9.2",
-    "vue-grid-layout": "^2.3.4",
-    "vue-svg-loader": "^0.12.0",
-    "vue-template-compiler": "^2.6.10"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite": "^6.3.5",
+    "vite-svg-loader": "^4.0.0",
+    "grid-layout-plus": "^1.1.1"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "license": "MIT"
+  ]
 }
